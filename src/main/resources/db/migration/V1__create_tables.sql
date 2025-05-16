@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS tb_workshift (
+    id SERIAL PRIMARY KEY,
+    description VARCHAR(100) NOT NULL,
+    daily_hours INT NOT NULL,
+    pause_minutes INT NOT NULL,
+    status_log VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tb_user (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    work_shift_id INT UNIQUE NOT NULL,
+    FOREIGN KEY (work_shift_id) REFERENCES tb_workshift(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS tb_worklog (
+    id SERIAL PRIMARY KEY,
+    work_log_selected TIMESTAMP NOT NULL,
+    delayed_check_in BOOLEAN NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES tb_user(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
