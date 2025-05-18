@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.idus.worklog.dtos.UserDTO;
 import com.idus.worklog.models.WorkShift;
 import com.idus.worklog.services.WorkShiftService;
 
@@ -33,8 +32,10 @@ public class WorkShiftController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public WorkShift findByID(@PathVariable Long id) {
-		return workShiftService.findById(id);
+	public ResponseEntity<WorkShift> findById(@PathVariable Long id){
+		WorkShift obj = workShiftService.findById(id);
+		
+		return ResponseEntity.ok().body(obj);
 	}
 
 	@PostMapping
