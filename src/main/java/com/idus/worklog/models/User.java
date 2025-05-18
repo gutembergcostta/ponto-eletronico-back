@@ -7,7 +7,12 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.idus.worklog.enums.Role;
+import com.idus.worklog.enums.WorkShiftType;
+import com.idus.worklog.strategy.EightHourShift;
+import com.idus.worklog.strategy.SixHourShift;
+import com.idus.worklog.strategy.WorkShift;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,50 +22,51 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @Table(name = "tb_user")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(nullable = false, length = 255)
-    private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, unique = true, length = 255)
-    private String email;
+	@Column
+	private String name;
 
-    @Column(nullable = false)
-    private String password;
+	@Column
+	private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+	@Column
+	private String password;
 
-    @OneToOne
-    @JoinColumn(name = "work_shift_id", nullable = false)
-    private WorkShift workShift;
+	@Enumerated(EnumType.STRING)
+	@Column
+	private Role role;
 
-    
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkLog> workLogs = new ArrayList<>();
+	@Enumerated(EnumType.STRING)
+	@Column(name = "work_shift_type", nullable = false)
+	private WorkShiftType workShiftType;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+	@Transient
+	private WorkShift workShift;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<WorkLog> workLogs = new ArrayList<>();
+
+	@CreationTimestamp
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp
+	private LocalDateTime updatedAt;
 
 	public Long getId() {
 		return id;
@@ -103,15 +109,25 @@ public class User {
 	}
 
 	public WorkShift getWorkShift() {
-		return workShift;
+		if (this.workShift == null) {
+			this.workShift = switch (this.workShiftType) {
+			case SIX_HOURS -> new SixHourShift();
+			case EIGHT_HOURS -> new EightHourShift();
+			};
+		}
+		return this.workShift;
 	}
-
 
 	public List<WorkLog> getWorkLogs() {
 		return workLogs;
 	}
 
-	
-    
-    
+	public WorkShiftType getWorkShiftType() {
+		return workShiftType;
+	}
+
+	public void setWorkShiftType(WorkShiftType workShiftType) {
+		this.workShiftType = workShiftType;
+	}
+
 }

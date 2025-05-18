@@ -6,24 +6,28 @@ public class UserDTO {
 	private Long id;
 	private String name;
 	private String email;
-	private String workShift;
+	private String role;
+	private String workShiftType;
 	
+
 	public UserDTO() {
-		
+
 	}
 
-	public UserDTO(Long id, String name, String email, String workShift) {
+	public UserDTO(Long id, String name, String email, String workShiftType, String role) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
-		this.workShift = workShift;
+		this.workShiftType = workShiftType;
+		this.role = role;
 	}
-	
+
 	public UserDTO(User user) {
 		this.id = user.getId();
 		this.name = user.getName();
 		this.email = user.getEmail();
-		this.workShift = user.getWorkShift().getDescription();
+		this.workShiftType = user.getWorkShift().getDescription();
+		this.role = user.getRole().getDescription();
 	}
 
 	public Long getId() {
@@ -51,11 +55,19 @@ public class UserDTO {
 	}
 
 	public String getWorkShift() {
-		return workShift;
+		return workShiftType;
 	}
 
 	public void setWorkShift(String workShift) {
-		this.workShift = workShift;
+		this.workShiftType = workShift;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 	

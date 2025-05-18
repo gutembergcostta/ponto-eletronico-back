@@ -4,8 +4,12 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.idus.worklog.enums.WorkLogStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,6 +43,60 @@ public class WorkLog {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
+    @Column(name = "work_log_status")
+    @Enumerated(EnumType.STRING)
+    private WorkLogStatus workLogStatus;
+    
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDateTime getWorkLogSelected() {
+		return workLogSelected;
+	}
+
+	public void setWorkLogSelected(LocalDateTime workLogSelected) {
+		this.workLogSelected = workLogSelected;
+	}
+
+	public Boolean getDelayedCheckIn() {
+		return delayedCheckIn;
+	}
+
+	public void setDelayedCheckIn(Boolean delayedCheckIn) {
+		this.delayedCheckIn = delayedCheckIn;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public WorkLogStatus getWorkLogStatus() {
+		return workLogStatus;
+	}
+
+	public void setWorkLogStatus(WorkLogStatus workLogStatus) {
+		this.workLogStatus = workLogStatus;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+    
+    
 }
