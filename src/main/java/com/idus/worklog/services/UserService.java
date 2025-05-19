@@ -20,6 +20,8 @@ import jakarta.persistence.EntityNotFoundException;
 public class UserService {
 	@Autowired
 	private UserRepository repository;
+	
+	
 
 	public List<UserDTO> findAll() {
 		List<User> users = repository.findAll();

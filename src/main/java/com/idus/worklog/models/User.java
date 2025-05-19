@@ -2,10 +2,14 @@ package com.idus.worklog.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.idus.worklog.enums.Role;
@@ -32,7 +36,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "tb_user")
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User implements UserDetails{
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,6 +73,18 @@ public class User {
 
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
+	
+	public User() {
+		
+	}
+	
+	public User(String name, String email, String password, Role role, WorkShiftType workShiftType){
+		this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.workShiftType = workShiftType;
+    }
 
 	public Long getId() {
 		return id;
@@ -128,6 +146,20 @@ public class User {
 
 	public void setWorkShiftType(WorkShiftType workShiftType) {
 		this.workShiftType = workShiftType;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		if(this.role == Role.ADMIN){
+			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+		}else {
+			return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		}
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
 	}
 
 }
