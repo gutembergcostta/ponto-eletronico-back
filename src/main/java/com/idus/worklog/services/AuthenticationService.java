@@ -32,7 +32,8 @@ public class AuthenticationService {
 		
 		var token = tokenService.generateToken((User) auth.getPrincipal());
 		
-		return ResponseEntity.ok(new LoginResponseDTO(token));
+		User user = (User) auth.getPrincipal();
+		return ResponseEntity.ok(new LoginResponseDTO(token, user.getId(), user.getRole().name(), user.getEmail()));
 	}
 	
 
