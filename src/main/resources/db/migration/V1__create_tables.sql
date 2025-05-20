@@ -18,3 +18,6 @@ CREATE TABLE IF NOT EXISTS tb_worklog (
     FOREIGN KEY (user_id) REFERENCES tb_user(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO tb_user (name, email, password, role, work_shift_type) 
+VALUES ('Administrador', 'admin@worklog.com', '$2a$10$nOZ7QoPR./3nVQNQ5h81N.LqHv7fBK4jd8f7cQQznAmJQSZ3gPK4O', 'ADMIN', 'EIGHT_HOURS');
